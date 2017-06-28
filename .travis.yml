@@ -1,0 +1,28 @@
+language: python
+python:
+  - "3.5"
+sudo: required
+branches:
+  only:
+  - master
+before_install:
+  - echo "Configure locale"
+  - sudo locale-gen pt_BR pt_BR.UTF-8
+  - sudo dpkg-reconfigure locales
+  - LC_TIME=pt_BR.utf-8
+  - date
+  - locale -a
+install:
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+script:
+  - make publish
+deploy:
+  provider: pages
+  repo: pedrohrr/fullstackninja.com.br
+  target_branch: gh-pages
+  skip_cleanup: true
+  github_token: $GHP_TOKEN
+  local_dir: output
+  on:
+    branch: master
