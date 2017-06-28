@@ -22,7 +22,7 @@ deploy:
   repo: pedrohrr/fullstackninja.com.br
   target_branch: gh-pages
   skip_cleanup: true
-  github_token: $GITHUB_TOKEN
+  github_token: $GHP_TOKEN
   local_dir: output
   on:
     branch: master
