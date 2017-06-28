@@ -1,0 +1,27 @@
+{
+  "name": "fullstackninja.com.br",
+  "version": "1.0.0",
+  "description": "Blog com dicas sobre desenvolvimento FullStack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrohrr/fullstackninja.com.br.git"
+  },
+  "author": "Pedro Henrique Rodrigues",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pedrohrr/fullstackninja.com.br/issues"
+  },
+  "homepage": "https://github.com/pedrohrr/fullstackninja.com.br#readme",
+  "dependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-connect-multi": "^1.0.8",
+    "gulp-shell": "^0.5.2",
+    "gulp-watch": "^4.3.11"
+  }
+}
