@@ -2,7 +2,8 @@
 layout: post
 title:  Maven Profiles para Projetos Spring-Boot
 date:   2017-06-29
-categories: Blog
+categories: Spring
+image: images/spring.png
 ---
 
 O grande problema ao lidar com a migração de sistemas entre **DEV**, **QAS** e **PRD** é manusear corretamente os ponteiros entre integrações e váriações de acordo com o ambiente.
