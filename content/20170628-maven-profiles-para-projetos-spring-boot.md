@@ -128,4 +128,4 @@ Acesse <http://localhost:8080/info>
 Agora realize o mesmo procedimento para **QAS** e **PRD**.
 
 ##Código Fonte
-[GitHub](https://github.com/pedrohrr/fullstackninja.com.br/projects/maven-profiles-resources)
+[GitHub](https://github.com/pedrohrr/fullstackninja.com.br/tree/master/projects/maven-profiles-resources)
