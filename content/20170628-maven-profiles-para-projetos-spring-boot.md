@@ -2,8 +2,8 @@
 layout: post
 title:  Maven Profiles para Projetos Spring-Boot
 date:   2017-06-29
-categories: Spring
-image: images/spring.png
+category: Spring
+image: /images/spring.png
 ---
 
 O grande problema ao lidar com a migração de sistemas entre **DEV**, **QAS** e **PRD** é manusear corretamente os ponteiros entre integrações e váriações de acordo com o ambiente.
@@ -15,6 +15,19 @@ Em projetos Spring Boot rodados como Boot projects (`java -jar projeto.jar`) con
 O problema neste caso é que muitas vezes temos que hospedar o projeto em outros servidores, de modo que não podemos utilizar o seu boot initializer. Sendo assim o que fazer?
 
 Uma saída é utilizar o **Maven Profiles** em conjunto com o **Maven Resources**. Com o **Maven Profiles** conseguimos criar variáveis de acordo com o ambiente e com o **Resources** conseguimos subistituir essas variáveis nos arquivos de configuração do **Spring Boot**.
+
+##[Spring Boot Actuator](https://github.com/spring-projects/spring-boot/tree/master/spring-boot-actuator)
+
+Primeiramente adicionaremos o actuator como uma dependência do nosso projeto:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+O Actuator irá disponibilizar alguns endpoints já 'prontos' para nosso projeto, incluindo o `/info` que usaremos posteriormente.
 
 ##[Maven Profiles](http://maven.apache.org/guides/introduction/introduction-to-profiles.html)
 
@@ -46,7 +59,7 @@ Maven Profiles é a maneira que maven permite que definamos variáveis e caminho
             <app.auth.server.port>80</app.auth.server.port>
         </properties>
     </profile>
-</proviles>
+</profiles>
 ```
 
 Para cada profile definimos 3 variáveis: o label do ambiente (`app.environment.label`), o endereço (`app.auth.server.address`) e porta (`app.auth.server.port`) do servidor de autenticação. Sendo assim quando rodarmos o build do maven (`mvn clean install -P<profile>`) informamos qual o profile a ser utilizado. Temos a opção de colocar a tag `activation` dentro de um profile o definindo como o padrão caso nenhum seja fornecido:
@@ -91,15 +104,28 @@ Essa configuração informa para o plugin que ele deve ler todos os arquivos den
 
 ##Spring Boot [application.properties](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html)
 
-Dentro do `application.properties` iremos utilizar as 3 variáveis criadas pelos profiles. Para isso colocaremo-as dentro da [info](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-application-info-env) fornecida por padrão pelo **Spring Boot**:
+Dentro do `application.properties` iremos utilizar as 3 variáveis criadas pelos profiles. Para isso colocaremo-as como filhas da propriedade `info` que por padrão joga todo o seu conteúdo como JSON através do endpoint `/info` fornecido pelo actuator:
 
 ```
+server.port=9000
+
 info.environment=@app.environment.label@
 info.auth.server=@app.auth.server.address@:@app.auth.server.port@
 ```
 
-Testando
---------
+##Testando
 
-Para testar o funcionamento basta realizar o deploy do projeto em algum servidor e executar o endpoint http://server:porta/projeto/info.
-As variáveis foram devidadmente preenchidas nos seus respectivos lugares.
+Execute o projeto como spring-boot passando `dev` como profile (`-P`)
+
+```
+mvn spring-boot:run -Pdev
+```
+
+Acesse <http://localhost:8080/info>
+
+![Resultado do teste](/images/20170628/test.jpg)
+
+Agora realize o mesmo procedimento para **QAS** e **PRD**.
+
+##Código Fonte
+[GitHub](https://github.com/pedrohrr/fullstackninja.com.br/projects/maven-profiles-resources)
