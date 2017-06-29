@@ -9,15 +9,13 @@ O grande problema ao lidar com a migração de sistemas entre **DEV**, **QAS** e
 
 Em projetos Spring Boot rodados como Boot projects (`java -jar projeto.jar`) configuramos inumeros application.properties, um para cada ambiente (ex.: `application-dev.properties`). Então ao rodar o projeto informa-se o profile escolhido (`java -jar -Dspring.profiles.active=dev projeto.jar`).
 
-**Mais informações em:** https://docs.spring.io/spring-boot/docs/current/reference/html/howto-properties-and-configuration.html#howto-change-configuration-depending-on-the-environment
-----------------------
+**Mais informações em:** <https://docs.spring.io/spring-boot/docs/current/reference/html/howto-properties-and-configuration.html#howto-change-configuration-depending-on-the-environment>
 
 O problema neste caso é que muitas vezes temos que hospedar o projeto em outros servidores, de modo que não podemos utilizar o seu boot initializer. Sendo assim o que fazer?
 
 Uma saída é utilizar o **Maven Profiles** em conjunto com o **Maven Resources**. Com o **Maven Profiles** conseguimos criar variáveis de acordo com o ambiente e com o **Resources** conseguimos subistituir essas variáveis nos arquivos de configuração do **Spring Boot**.
 
-**Maven Profiles -** http://maven.apache.org/guides/introduction/introduction-to-profiles.html
-------------------
+##[Maven Profiles](http://maven.apache.org/guides/introduction/introduction-to-profiles.html)
 
 Maven Profiles é a maneira que maven permite que definamos variáveis e caminhos para o build dependendo do perfil selecionado. No nosso caso configuramos **DEV**, **QAS** e **PRD**:
 
@@ -60,8 +58,7 @@ Para cada profile definimos 3 variáveis: o label do ambiente (`app.environment.
 
 Com as variáveis definidas precisamos agora utilizalas pelo Spring. É ai que o **Maven Resources** entra em ação.
 
-**Maven Resources -** https://maven.apache.org/plugins/maven-resources-plugin/
--------------------
+##[Maven Resources](https://maven.apache.org/plugins/maven-resources-plugin/)
 
 O **Maven Resources** é um plugin com inumeras utilidades que age principalmente sobre os recursos da aplicação, renomeando, mudando de lugar e até subistituindo o conteúdo de arquivos de acordo com padrões, que é justamente o que precisamos.
 
@@ -91,8 +88,7 @@ O **Maven Resources** é um plugin com inumeras utilidades que age principalment
 
 Essa configuração informa para o plugin que ele deve ler todos os arquivos dentro de `src/main/resources` e subistituir tudo que for delimitado por `@`. Ex.: `@property.replace@`
 
-Spring Boot application.properties - https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
-----------------------------------
+##Spring Boot [application.properties](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html)
 
 Dentro do `application.properties` iremos utilizar as 3 variáveis criadas pelos profiles. Para isso colocaremo-as dentro da [info](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-application-info-env) fornecida por padrão pelo **Spring Boot**:
 
