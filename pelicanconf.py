@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-AUTHOR = 'Pedro Henrique Rodrigues'
+AUTHOR = 'Pedro Henrique Ribeiro Rodrigues'
 SITENAME = 'FullStack Ninja'
 SITEURL = 'http://fullstackninjaa.com.br'
-CONTACT_EMAIL = '<email>'
+CONTACT_EMAIL = 'pedro.rib.rod@gmail.com'
 
 PATH = 'content'
 
@@ -108,5 +108,10 @@ AUTHORS = {
             'bottom_responsible' : '7962001772'
           }
         }
-    }
+    },
+	'Pedro Henrique Ribeiro Rodrigues': {
+		'summary': 'É Engenheiro da Computação pela ETEP Faculdades',
+		'image': 'https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAtTAAAAJDQzNTY1YThkLWYyNGYtNGI0My1hYzE2LTkzNDI5NmQwOGE2ZA.jpg',
+		'adsense': DEFAULT_ADSENSE
+	}
 }
