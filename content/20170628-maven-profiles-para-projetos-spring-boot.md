@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Maven Profiles para Projetos Spring-Boot"
+title:  Maven Profiles para Projetos Spring-Boot
 date:   2017-06-29
 categories: Blog
 ---
