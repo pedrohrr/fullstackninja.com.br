@@ -6,7 +6,11 @@ category: Spring
 image: /images/spring.png
 ---
 
-O grande problema ao lidar com a migração de sistemas entre **DEV**, **QAS** e **PRD** é manusear corretamente os ponteiros entre integrações e váriações de acordo com o ambiente.
+Neste post iremos mostrar como usar de maneira fácil os Maven Profiles em conjunto com o Maven Resources para controlar as versões de uma aplicação em cada ambiente.
+
+##O Problema
+
+Ao lidar com a migração de sistemas entre **DEV**, **QAS** e **PRD** muitas vezes esbarramos na configuração de váriações de acordo com o ambiente.
 
 Em projetos Spring Boot rodados como Boot projects (`java -jar projeto.jar`) configuramos inumeros application.properties, um para cada ambiente (ex.: `application-dev.properties`). Então ao rodar o projeto informa-se o profile escolhido (`java -jar -Dspring.profiles.active=dev projeto.jar`).
 
@@ -113,6 +117,10 @@ info.environment=@app.environment.label@
 info.auth.server=@app.auth.server.address@:@app.auth.server.port@
 ```
 
+* Definimos a porta da aplicação para 9000 para evitar conflitos na 8080.
+* Na propriedade `environment` exibiremos o label do ambiente.
+* Na propriedade `auth.server` exibiremos o endereço do servidor e porta.
+
 ##Testando
 
 Execute o projeto como spring-boot passando `dev` como profile (`-P`)
@@ -121,11 +129,13 @@ Execute o projeto como spring-boot passando `dev` como profile (`-P`)
 mvn spring-boot:run -Pdev
 ```
 
-Acesse <http://localhost:8080/info>
+Acesse <http://localhost:9000/info>
 
 ![Resultado do teste](/images/20170628/test.jpg)
 
 Agora realize o mesmo procedimento para **QAS** e **PRD**.
 
-##Código Fonte
-[GitHub](https://github.com/pedrohrr/fullstackninja.com.br/tree/master/projects/maven-profiles-resources)
+##Código Fonte 
+<a href="https://github.com/pedrohrr/fullstackninja.com.br/tree/master/projects/maven-profiles-resources" class="btn btn-success">
+	GitHub
+</a>
