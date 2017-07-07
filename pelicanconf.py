@@ -33,7 +33,8 @@ RELATIVE_URLS = True
 STATIC_PATHS = ['extra/CNAME', 'images']
 
 EXTRA_PATH_METADATA = {
-    'extra/CNAME': {'path': 'CNAME'}
+    'extra/CNAME': {'path': 'CNAME'},
+	'extra/google61303f9a97d92dd1.html': {'path': 'google61303f9a97d92dd1.html'}
 }
 
 # Plugins
