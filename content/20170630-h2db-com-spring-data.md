@@ -173,7 +173,7 @@ A anotação `@GetMapping` faz com que o método `list` possa ser acessada pelo 
 
 4. Acesse a url <http://localhost:9000/pessoas> para consultar pela aplicação o que foi cadastrado diretamente no console
 
-    ![Resultado do Teste](/images/20170705/test.jpg)
+    ![Resultado do Teste](/images/20170705/test.jpg){:width=100%}
 
 ##Código Fonte 
 <a href="https://github.com/pedrohrr/fullstackninja.com.br/tree/master/projects/h2db-spring-data" class="btn btn-success">
