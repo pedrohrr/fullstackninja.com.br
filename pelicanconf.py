@@ -85,11 +85,11 @@ SITEMAP = {
 }
 
 DEFAULT_ADSENSE = {
-	'adClientId' : '',
+	'adClientId' : 'ca-pub-3499823579380102',
 	'adSlot' : {
-		'top_responsible' : '',
-		'rside_300x600' : '',
-		'bottom_responsible' : ''
+		'top_responsible' : '4001442477',
+		'rside_300x600' : '8431642073',
+		'bottom_responsible' : '4001442477'
 	}
 }
 
@@ -111,7 +111,7 @@ AUTHORS = {
         }
     },
 	'Pedro Henrique Ribeiro Rodrigues': {
-		'summary': 'É Engenheiro da Computação pela ETEP Faculdades',
+		'summary': 'Desenvolvedor Java desde 2008, fullstack desde 2012, geek e gamer desde sempre',
 		'image': 'https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAtTAAAAJDQzNTY1YThkLWYyNGYtNGI0My1hYzE2LTkzNDI5NmQwOGE2ZA.jpg',
 		'adsense': DEFAULT_ADSENSE
 	}
