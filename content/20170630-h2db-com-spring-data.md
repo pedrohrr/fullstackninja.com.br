@@ -163,7 +163,7 @@ A anotação `@GetMapping` faz com que o método `list` possa ser acessada pelo 
     ```
 2. Acesse o console do **H2** através da url <http://localhost:9000/h2>, faça login com o usuário e senha definidos no `application.properties`.
 
-    ![Console do H2](/images/20170705/console-h2.jpg)
+    ![Console do H2](/images/20170705/console-h2.jpg){:width=100%}
 
 3. No console do **H2** insira informações na tabela **Pessoa**
 
@@ -173,7 +173,7 @@ A anotação `@GetMapping` faz com que o método `list` possa ser acessada pelo 
 
 4. Acesse a url <http://localhost:9000/pessoas> para consultar pela aplicação o que foi cadastrado diretamente no console
 
-    ![Resultado do Teste](/images/20170705/test.jpg){:width=100%}
+    ![Resultado do Teste](/images/20170705/test.jpg)
 
 ##Código Fonte 
 <a href="https://github.com/pedrohrr/fullstackninja.com.br/tree/master/projects/h2db-spring-data" class="btn btn-success">
