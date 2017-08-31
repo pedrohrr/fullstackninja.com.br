@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>FullStack Ninja</title><link href="http://fullstackninja.com.br/" rel="alternate"></link><link href="http://fullstackninja.com.br/feeds/spring.atom.xml" rel="self"></link><id>http://fullstackninja.com.br/</id><updated>2017-06-30T00:00:00-03:00</updated><entry><title>H2 Database com Spring Data</title><link href="http://fullstackninja.com.br/h2-database-com-spring-data/" rel="alternate"></link><published>2017-06-30T00:00:00-03:00</published><updated>2017-06-30T00:00:00-03:00</updated><author><name>Pedro Henrique Ribeiro Rodrigues</name></author><id>tag:fullstackninja.com.br,2017-06-30:h2-database-com-spring-data/</id><summary type="html">&lt;h2&gt;O Problema&lt;/h2&gt;
+&lt;p&gt;Quando estamos começando um novo projeto e necessitamos de um banco de dados, muitas vezes perdemos um tempo desnecessário configurando bancos e criando a estrutura de dados. O intuíto deste post é mostrar que tudo pode ficar mais fácil ao se usar o &lt;strong&gt;H2 Database&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2&gt;&lt;a href="http://www.h2database.com/html/main.html"&gt;H2 Database Engine&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;O &lt;strong&gt;H2&lt;/strong&gt; é um banco de dados &lt;strong&gt;Open Source&lt;/strong&gt; que funciona em memória com um console acessível pelo browser dentro do contexto da aplicação. Como ele funciona em memória todo seu armazenamento é &lt;strong&gt;volátil&lt;/strong&gt;, ou seja, a cada sobe e desce da aplicação ele será reconstruído.
+Seu intuíto é ser um banco de configuração rápida e fácil, visando favorecer a produtividade.
+Outro banco de dados em memória é o &lt;a href="http://hsqldb.org/"&gt;HSQLDB&lt;/a&gt;, que também oferece os mesmos benefícios. Escolhemos o H2 pela sua fácil configuração em projetos Spring Boot.&lt;/p&gt;
+&lt;h2&gt;Maven&lt;/h2&gt;
+&lt;p&gt;Para utilizar o &lt;strong&gt;H2&lt;/strong&gt; em nosso projeto iremos necessitar de duas dependeências:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-data-jpa&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.h2database&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;h2&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;runtime&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Spring Data&lt;/h3&gt;
+&lt;p&gt;A dependência do &lt;strong&gt;Spring Data&lt;/strong&gt; fará com que Spring dê suporte ao uso de Entidades e Repositorios para conexão com o banco. Trazendo consigo também &lt;strong&gt;Hibernate&lt;/strong&gt; e &lt;strong&gt;JPA&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3&gt;H2&lt;/h3&gt;
+&lt;p&gt;Na dependencia do &lt;strong&gt;H2&lt;/strong&gt; definimos o escopo como &lt;code&gt;runtime&lt;/code&gt;, pois necessitamos da biblioteca apenas durante a execução. Não utilizamos nenhuma classe deste pacote.&lt;/p&gt;
+&lt;p&gt;Adicionaremos também a dependência ao pacote de &lt;code&gt;Web&lt;/code&gt; para que consigamos expor os dados através de endpoints &lt;strong&gt;REST&lt;/strong&gt;, que serão mostrados posteriormente.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-web&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;application.properties&lt;/h2&gt;
+&lt;p&gt;Para configurar o banco de dados definiremos os seguintes parâmetros no &lt;code&gt;application.properties&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="na"&gt;server.port&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;9000&lt;/span&gt;
+&lt;span class="c"&gt;#H2&lt;/span&gt;
+&lt;span class="c"&gt;# -Habilitará o acesso ao console do banco de dados&lt;/span&gt;
+&lt;span class="na"&gt;spring.h2.console.enabled&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;true &lt;/span&gt;
+&lt;span class="c"&gt;# -URL na qual o console será habilitado&lt;/span&gt;
+&lt;span class="na"&gt;spring.h2.console.path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/h2&lt;/span&gt;
+&lt;span class="c"&gt;#Datasource&lt;/span&gt;
+&lt;span class="c"&gt;# -URL de acesso ao banco&lt;/span&gt;
+&lt;span class="na"&gt;spring.datasource.url&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;jdbc:h2:file:~/h2db&lt;/span&gt;
+&lt;span class="c"&gt;# -Usuário de acesso&lt;/span&gt;
+&lt;span class="na"&gt;spring.datasource.username&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;h2sa&lt;/span&gt;
+&lt;span class="c"&gt;# -Senha de acesso&lt;/span&gt;
+&lt;span class="na"&gt;spring.datasource.password&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;admin&lt;/span&gt;
+&lt;span class="c"&gt;# -Driver utilizado para conexão&lt;/span&gt;
+&lt;span class="na"&gt;spring.datasource.driver-class-name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;org.h2.Driver&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;Definimos a porta da aplicação para 9000 para evitar conflitos na 8080.&lt;/li&gt;
+&lt;li&gt;As propriedades contidas dentro de &lt;strong&gt;#H2&lt;/strong&gt; serviram somente se o acesso ao console for necessário. Caso queira utilizar uma IDE para acesso ao banco ele poderá ser desabilitado.&lt;/li&gt;
+&lt;li&gt;As propriedades dentro de &lt;strong&gt;#Datasource&lt;/strong&gt; configuram o acesso ao banco. &lt;code&gt;url&lt;/code&gt;, &lt;code&gt;username&lt;/code&gt; e &lt;code&gt;password&lt;/code&gt; podem ser alterados de acordo com sua preferência.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Entity&lt;/h2&gt;
+&lt;p&gt;Configuraremos agora a entidade &lt;strong&gt;Pessoa&lt;/strong&gt; com a seguinte estrutura:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;package&lt;/span&gt; &lt;span class="nn"&gt;br.com.fullstackninja.h2dbspringdata.entity&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;javax.persistence.Entity&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;javax.persistence.GeneratedValue&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;javax.persistence.GenerationType&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;javax.persistence.Id&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="nd"&gt;@Entity&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;PESSOA&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Pessoa&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Id&lt;/span&gt;
+    &lt;span class="nd"&gt;@GeneratedValue&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strategy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;GenerationType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;IDENTITY&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;Long&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;nome&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Long&lt;/span&gt; &lt;span class="nf"&gt;getId&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;setId&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="n"&gt;Long&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;getNome&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;nome&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;setNome&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;nome&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;nome&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nome&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;Pela anotação &lt;code&gt;@Entity&lt;/code&gt; informamos o nome correspondente da nossa tabela&lt;/li&gt;
+&lt;li&gt;Teremos no atributo &lt;code&gt;Id&lt;/code&gt; nossa chave primária da tabela, que será auto incrementada ao usar a anotação &lt;code&gt;@GeneratedValue&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Por padrão ao rodar nossa aplicação, o &lt;strong&gt;Spring Boot&lt;/strong&gt; identificando a existência do &lt;strong&gt;H2&lt;/strong&gt; fará com que o &lt;strong&gt;Hibernate&lt;/strong&gt; contido dentro do &lt;strong&gt;Spring Data&lt;/strong&gt; se encarregue de criar todas nossas classes anotadas como &lt;code&gt;@Entity&lt;/code&gt; no banco de dados.&lt;/p&gt;
+&lt;h2&gt;Repository&lt;/h2&gt;
+&lt;p&gt;Para acessar a tabela pessoa iremos criar um Repositório Spring Data:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;package&lt;/span&gt; &lt;span class="nn"&gt;br.com.fullstackninja.h2dbspringdata.repository&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;br.com.fullstackninja.h2dbspringdata.entity.Pessoa&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;org.springframework.data.repository.CrudRepository&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;interface&lt;/span&gt; &lt;span class="nc"&gt;PessoaRepository&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;CrudRepository&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Pessoa&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Long&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Como extendemos o &lt;code&gt;CrudRepository&lt;/code&gt; já temos acesso aos metodos para criar e consultar os dados de &lt;strong&gt;Pessoa&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2&gt;REST Controller&lt;/h2&gt;
+&lt;p&gt;Para que consigamos acessar nossas informações pela aplicação iremos criar nosso &lt;strong&gt;Controller&lt;/strong&gt; próprio para a entidade &lt;strong&gt;Pessoa&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;package&lt;/span&gt; &lt;span class="nn"&gt;br.com.fullstackninja.h2dbspringdata.controller&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;br.com.fullstackninja.h2dbspringdata.entity.Pessoa&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;br.com.fullstackninja.h2dbspringdata.repository.PessoaRepository&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;org.springframework.web.bind.annotation.GetMapping&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;org.springframework.web.bind.annotation.RequestMapping&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;org.springframework.web.bind.annotation.RestController&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="nd"&gt;@RestController&lt;/span&gt;
+&lt;span class="nd"&gt;@RequestMapping&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/pessoas&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;PessoaController&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Autowired&lt;/span&gt;
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;PessoaRepository&lt;/span&gt; &lt;span class="n"&gt;repository&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@GetMapping&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Pessoa&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nf"&gt;list&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;findAll&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;A anotação &lt;code&gt;@GetMapping&lt;/code&gt; faz com que o método &lt;code&gt;list&lt;/code&gt; possa ser acessada pelo método &lt;strong&gt;GET&lt;/strong&gt; através da url &lt;code&gt;/pessoas&lt;/code&gt; configurada na anotação &lt;code&gt;@RequestMapping&lt;/code&gt; definida para a classe.&lt;/p&gt;
+&lt;h2&gt;Testando&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Rode o projeto como Spring-Boot
+    &lt;code&gt;mvn spring-boot:run&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Acesse o console do &lt;strong&gt;H2&lt;/strong&gt; através da url &lt;a href="http://localhost:9000/h2"&gt;http://localhost:9000/h2&lt;/a&gt;, faça login com o usuário e senha definidos no &lt;code&gt;application.properties&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Console do H2" src="/images/20170705/console-h2.jpg" width="100%" /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;No console do &lt;strong&gt;H2&lt;/strong&gt; insira informações na tabela &lt;strong&gt;Pessoa&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;insert into pessoa (nome) values ('Pedro');&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Acesse a url &lt;a href="http://localhost:9000/pessoas"&gt;http://localhost:9000/pessoas&lt;/a&gt; para consultar pela aplicação o que foi cadastrado diretamente no console&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Resultado do Teste" src="/images/20170705/test.jpg" /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Código Fonte&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/pedrohrr/fullstackninja.com.br/tree/master/projects/h2db-spring-data" class="btn btn-success"&gt;
+    GitHub
+&lt;/a&gt;&lt;/p&gt;</summary></entry><entry><title>Maven Profiles para Projetos Spring-Boot</title><link href="http://fullstackninja.com.br/maven-profiles-para-projetos-spring-boot/" rel="alternate"></link><published>2017-06-29T00:00:00-03:00</published><updated>2017-06-29T00:00:00-03:00</updated><author><name>Pedro Henrique Ribeiro Rodrigues</name></author><id>tag:fullstackninja.com.br,2017-06-29:maven-profiles-para-projetos-spring-boot/</id><summary type="html">&lt;p&gt;Neste post iremos mostrar como usar de maneira fácil os Maven Profiles em conjunto com o Maven Resources para controlar as versões de uma aplicação em cada ambiente.&lt;/p&gt;
+&lt;h2&gt;O Problema&lt;/h2&gt;
+&lt;p&gt;Ao lidar com a migração de sistemas entre &lt;strong&gt;DEV&lt;/strong&gt;, &lt;strong&gt;QAS&lt;/strong&gt; e &lt;strong&gt;PRD&lt;/strong&gt; muitas vezes esbarramos na configuração de váriações de acordo com o ambiente.&lt;/p&gt;
+&lt;p&gt;Em projetos Spring Boot rodados como Boot projects (&lt;code&gt;java -jar projeto.jar&lt;/code&gt;) configuramos inumeros application.properties, um para cada ambiente (ex.: &lt;code&gt;application-dev.properties&lt;/code&gt;). Então ao rodar o projeto informa-se o profile escolhido (&lt;code&gt;java -jar -Dspring.profiles.active=dev projeto.jar&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mais informações em:&lt;/strong&gt; &lt;a href="https://docs.spring.io/spring-boot/docs/current/reference/html/howto-properties-and-configuration.html#howto-change-configuration-depending-on-the-environment"&gt;https://docs.spring.io/spring-boot/docs/current/reference/html/howto-properties-and-configuration.html#howto-change-configuration-depending-on-the-environment&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;O problema neste caso é que muitas vezes temos que hospedar o projeto em outros servidores, de modo que não podemos utilizar o seu boot initializer. Sendo assim o que fazer?&lt;/p&gt;
+&lt;p&gt;Uma saída é utilizar o &lt;strong&gt;Maven Profiles&lt;/strong&gt; em conjunto com o &lt;strong&gt;Maven Resources&lt;/strong&gt;. Com o &lt;strong&gt;Maven Profiles&lt;/strong&gt; conseguimos criar variáveis de acordo com o ambiente e com o &lt;strong&gt;Resources&lt;/strong&gt; conseguimos subistituir essas variáveis nos arquivos de configuração do &lt;strong&gt;Spring Boot&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2&gt;&lt;a href="https://github.com/spring-projects/spring-boot/tree/master/spring-boot-actuator"&gt;Spring Boot Actuator&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Primeiramente adicionaremos o actuator como uma dependência do nosso projeto:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-actuator&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;O Actuator irá disponibilizar alguns endpoints já 'prontos' para nosso projeto, incluindo o &lt;code&gt;/info&lt;/code&gt; que usaremos posteriormente.&lt;/p&gt;
+&lt;h2&gt;&lt;a href="http://maven.apache.org/guides/introduction/introduction-to-profiles.html"&gt;Maven Profiles&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Maven Profiles é a maneira que maven permite que definamos variáveis e caminhos para o build dependendo do perfil selecionado. No nosso caso configuramos &lt;strong&gt;DEV&lt;/strong&gt;, &lt;strong&gt;QAS&lt;/strong&gt; e &lt;strong&gt;PRD&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;profiles&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;profile&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;id&amp;gt;&lt;/span&gt;dev&lt;span class="nt"&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;properties&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.environment.label&amp;gt;&lt;/span&gt;DEV&lt;span class="nt"&gt;&amp;lt;/app.environment.label&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.auth.server.address&amp;gt;&lt;/span&gt;server.dev.br&lt;span class="nt"&gt;&amp;lt;/app.auth.server.address&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.auth.server.port&amp;gt;&lt;/span&gt;8080&lt;span class="nt"&gt;&amp;lt;/app.auth.server.port&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;/properties&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/profile&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;profile&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;id&amp;gt;&lt;/span&gt;qas&lt;span class="nt"&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;properties&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.environment.label&amp;gt;&lt;/span&gt;QAS&lt;span class="nt"&gt;&amp;lt;/app.environment.label&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.auth.server.address&amp;gt;&lt;/span&gt;server.qas.br&lt;span class="nt"&gt;&amp;lt;/app.auth.server.address&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.auth.server.port&amp;gt;&lt;/span&gt;80&lt;span class="nt"&gt;&amp;lt;/app.auth.server.port&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;/properties&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/profile&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;profile&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;id&amp;gt;&lt;/span&gt;prd&lt;span class="nt"&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;properties&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.environment.label&amp;gt;&lt;/span&gt;PRD&lt;span class="nt"&gt;&amp;lt;/app.environment.label&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.auth.server.address&amp;gt;&lt;/span&gt;server.prd.br&lt;span class="nt"&gt;&amp;lt;/app.auth.server.address&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;app.auth.server.port&amp;gt;&lt;/span&gt;80&lt;span class="nt"&gt;&amp;lt;/app.auth.server.port&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;/properties&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/profile&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/profiles&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Para cada profile definimos 3 variáveis: o label do ambiente (&lt;code&gt;app.environment.label&lt;/code&gt;), o endereço (&lt;code&gt;app.auth.server.address&lt;/code&gt;) e porta (&lt;code&gt;app.auth.server.port&lt;/code&gt;) do servidor de autenticação. Sendo assim quando rodarmos o build do maven (&lt;code&gt;mvn clean install -P&amp;lt;profile&amp;gt;&lt;/code&gt;) informamos qual o profile a ser utilizado. Temos a opção de colocar a tag &lt;code&gt;activation&lt;/code&gt; dentro de um profile o definindo como o padrão caso nenhum seja fornecido:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;activation&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;activeByDefault&amp;gt;&lt;/span&gt;true&lt;span class="nt"&gt;&amp;lt;/activeByDefault&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/activation&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Com as variáveis definidas precisamos agora utilizalas pelo Spring. É ai que o &lt;strong&gt;Maven Resources&lt;/strong&gt; entra em ação.&lt;/p&gt;
+&lt;h2&gt;&lt;a href="https://maven.apache.org/plugins/maven-resources-plugin/"&gt;Maven Resources&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;O &lt;strong&gt;Maven Resources&lt;/strong&gt; é um plugin com inumeras utilidades que age principalmente sobre os recursos da aplicação, renomeando, mudando de lugar e até subistituindo o conteúdo de arquivos de acordo com padrões, que é justamente o que precisamos.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;finalName&amp;gt;&lt;/span&gt;projeto&lt;span class="nt"&gt;&amp;lt;/finalName&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.maven.plugins&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-resources-plugin&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;lt;delimiters&amp;gt;&lt;/span&gt;
+                    &lt;span class="nt"&gt;&amp;lt;delimiter&amp;gt;&lt;/span&gt;@&lt;span class="nt"&gt;&amp;lt;/delimiter&amp;gt;&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;lt;/delimiters&amp;gt;&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;lt;resources&amp;gt;&lt;/span&gt;
+                    &lt;span class="nt"&gt;&amp;lt;resource&amp;gt;&lt;/span&gt;
+                        &lt;span class="nt"&gt;&amp;lt;directory&amp;gt;&lt;/span&gt;src/main/resources&lt;span class="nt"&gt;&amp;lt;/directory&amp;gt;&lt;/span&gt;
+                        &lt;span class="nt"&gt;&amp;lt;filtering&amp;gt;&lt;/span&gt;true&lt;span class="nt"&gt;&amp;lt;/filtering&amp;gt;&lt;/span&gt;
+                    &lt;span class="nt"&gt;&amp;lt;/resource&amp;gt;&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;lt;/resources&amp;gt;&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+        ...
+    &lt;span class="nt"&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Essa configuração informa para o plugin que ele deve ler todos os arquivos dentro de &lt;code&gt;src/main/resources&lt;/code&gt; e subistituir tudo que for delimitado por &lt;code&gt;@&lt;/code&gt;. Ex.: &lt;code&gt;@property.replace@&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;Spring Boot &lt;a href="https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html"&gt;application.properties&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Dentro do &lt;code&gt;application.properties&lt;/code&gt; iremos utilizar as 3 variáveis criadas pelos profiles. Para isso colocaremo-as como filhas da propriedade &lt;code&gt;info&lt;/code&gt; que por padrão joga todo o seu conteúdo como JSON através do endpoint &lt;code&gt;/info&lt;/code&gt; fornecido pelo actuator:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;server.port=9000
+
+info.environment=@app.environment.label@
+info.auth.server=@app.auth.server.address@:@app.auth.server.port@
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;Definimos a porta da aplicação para 9000 para evitar conflitos na 8080.&lt;/li&gt;
+&lt;li&gt;Na propriedade &lt;code&gt;environment&lt;/code&gt; exibiremos o label do ambiente.&lt;/li&gt;
+&lt;li&gt;Na propriedade &lt;code&gt;auth.server&lt;/code&gt; exibiremos o endereço do servidor e porta.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Testando&lt;/h2&gt;
+&lt;p&gt;Execute o projeto como spring-boot passando &lt;code&gt;dev&lt;/code&gt; como profile (&lt;code&gt;-P&lt;/code&gt;)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mvn spring-boot:run -Pdev
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Acesse &lt;a href="http://localhost:9000/info"&gt;http://localhost:9000/info&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Resultado do teste" src="/images/20170628/test.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;Agora realize o mesmo procedimento para &lt;strong&gt;QAS&lt;/strong&gt; e &lt;strong&gt;PRD&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2&gt;Código Fonte&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/pedrohrr/fullstackninja.com.br/tree/master/projects/maven-profiles-resources" class="btn btn-success"&gt;
+    GitHub
+&lt;/a&gt;&lt;/p&gt;</summary></entry></feed>

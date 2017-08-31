@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+	google_ad_client: "ca-pub-3499823579380102",
+	enable_page_level_ads: true
+  });
+  </script>
+
+    <title>Como atualizar um repositório fork no GitHub - FullStack Ninja</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msvalidate.01" content="78C0671DB001DAE17FEE5D7CDDCA9E3C" />
+
+  <link href="http://fullstackninja.com.br/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="FullStack Ninja Full Atom Feed" />
+  <link href="http://fullstackninja.com.br/feeds/git.atom.xml" type="application/atom+xml" rel="alternate" title="FullStack Ninja Categories Atom Feed" />
+
+    <meta property="og:type" content="article">
+    <meta property="article:author" content="Gustavo Furtado de Oliveira Alves">
+    <meta property="article:published_time" content="10 de julho de 2017">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="http://fullstackninja.com.br/como-atualizar-um-repositorio-fork-no-github">
+    <meta property="og:title" content="Como atualizar um repositório fork no GitHub">
+    <meta property="og:image" content="http://fullstackninja.com.br/images/git.jpg">
+    <meta property="og:image:type" content="image/png">
+<meta property="og:description" content="Neste post iremos mostrar como atualizar o repositório fork do git, com os commits do repositório de origem. O Problema Quando vamos contribuir em um projeto Open Source no GitHub ...">
+    <meta property="description" content="Neste post iremos mostrar como atualizar o repositório fork do git, com os commits do repositório de origem. O Problema Quando vamos contribuir em um projeto Open Source no GitHub ...">
+
+  <!-- Última versão CSS compilada e minificada -->
+  <link rel="stylesheet" href="/theme/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- Tema opcional -->
+  <!--<link rel="stylesheet" href="/theme/bootstrap/3.3.7/css/bootstrap-theme.min.css">-->
+
+  <!-- Pygment -->
+  <link rel="stylesheet" href="/theme/css/pygment.css">
+
+  <!-- Style -->
+  <link rel="stylesheet" href="/theme/css/style.css">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#blog-menu">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://fullstackninja.com.br">FullStack Ninja</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="blog-menu">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="http://fullstackninja.com.br/categoria/git/">Git</a></li>
+        <li><a href="http://fullstackninja.com.br/categoria/spring/">Spring</a></li>
+      </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container -->
+</nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row banner-top">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3499823579380102"
+     data-ad-slot="4001442477"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>    </div>
+
+    <div class="row">
+      <div class="col-lg-8">
+<section id="content" class="body">
+  <header>
+    <h1 class="entry-title">
+      <a href="http://fullstackninja.com.br/como-atualizar-um-repositorio-fork-no-github/" rel="bookmark"
+         title="Permalink to Como atualizar um repositório fork no GitHub">Como atualizar um repositório fork no GitHub</a></h1>
+ 
+  </header>
+  <div class="post-info">
+    <time class="published" datetime="2017-07-10T00:00:00-03:00">
+      10 de julho de 2017
+    </time>
+    <address class="vcard author">
+      Por           <a class="url fn" href="http://fullstackninja.com.br/autor/gustavo-furtado-de-oliveira-alves/">Gustavo Furtado de Oliveira Alves</a>
+    </address>
+  </div><!-- /.post-info -->
+    <hr />
+  <div class="entry-content">
+    <p>Neste post iremos mostrar como atualizar o repositório fork do git, com os commits do repositório de origem.</p>
+<h2>O Problema</h2>
+<p>Quando vamos contribuir em um projeto <strong>Open Source</strong> no GitHub,
+temos que fazer um fork do repositório do projeto para a nossa conta.</p>
+<p>Após realizar a nossa contribuição no fork, fazemos o <strong>Pull Request</strong> para integrar os nossos commits
+ao repositório de origem do projeto.</p>
+<p>Entretanto é natural que nosso repositório <em>fork</em> fique defasado com o tempo.
+Ou seja, houve novos commits no repositório de origem desde o momento em que o <em>fork</em> foi criado.</p>
+<p>Neste momento precisamos atualizar o nosso repositório <em>fork</em> com os commits realizados no repositório de origem.</p>
+<p>Vamos ver como fazer isso.</p>
+<h2>Atualizando o Fork</h2>
+<p>Vamos pegar como exemplo o <a href="https://github.com/pedrohrr/fullstackninja.com.br">repositório</a> deste próprio blog.
+No momento em que escrevo este post, <a href="https://github.com/gustavofoa/fullstackninja.com.br">meu repositório fork</a>
+está desatualizado em relação ao repositório de origem.</p>
+<p>Abaixo você pode ver que o fork que tá na minha conta do github tem 5 commits.</p>
+<p><img alt="Fork desatualizado" src="/images/20170710/fork-desatualizado.png" width="100%" /></p>
+<p>E o repositório de origem que está na conta do Pedro tem 16 commits.</p>
+<p><img alt="Repositório de origem atualizado" src="/images/20170710/repo-origem-atualizado.png" width="100%" /></p>
+<p>Ou seja, meu repositório fork está 11 commits desatualizados.</p>
+<p>Entendendo que o git é um sistema de controle de versão distribuído,
+podemos seguir os seguintes passos para atualizar o nosso repositório fork.</p>
+<ol>
+<li>Baixar o cógido do fork no meu computador com o comando abaixo.</li>
+</ol>
+<div class="highlight"><pre><span></span>git clone https://github.com/gustavofoa/fullstackninja.com.br.git
+cd fullstackninja.com.br
+</pre></div>
+
+
+<p><img alt="Git clone" src="/images/20170710/git-clone.png" width="100%" /></p>
+<ol>
+<li>Configurar o repositório original como um repositório remoto do meu repositório local.</li>
+</ol>
+<div class="highlight"><pre><span></span>git remote add upstream https://github.com/pedrohrr/fullstackninja.com.br.git
+</pre></div>
+
+
+<p><img alt="Git remote add upstream" src="/images/20170710/git-remote-add-upstream.png" width="100%" /></p>
+<ol>
+<li>Baixar os commits do repositório original para a o meu repositório local.</li>
+</ol>
+<div class="highlight"><pre><span></span>git fetch upstream
+</pre></div>
+
+
+<p><img alt="Git fetch upstream" src="/images/20170710/git-fetch-upstream.png" width="100%" /></p>
+<ol>
+<li>Integrar os commits (merge) da branch upstream na minha branch de trabalho (master)</li>
+</ol>
+<div class="highlight"><pre><span></span>git pull upstream master
+</pre></div>
+
+
+<p><img alt="Git pull upstream master" src="/images/20170710/git-pull-upstream-master.png" width="100%" /></p>
+<ol>
+<li>Posso conferir que a branch master agora tem os commits que vieram do repositório de origem.</li>
+</ol>
+<div class="highlight"><pre><span></span>git status
+</pre></div>
+
+
+<p><img alt="Git status" src="/images/20170710/commits-pendentes-de-push.png" width="100%" /></p>
+<ol>
+<li>Realizar o push para o meu repositório fork (<em>origin master</em>).</li>
+</ol>
+<div class="highlight"><pre><span></span>git push origin master
+</pre></div>
+
+
+<p><img alt="Git push" src="/images/20170710/git-push.png" width="100%" /></p>
+<p>Pronto, com isso temos o nosso repositório fork atualizado.</p>
+<p><img alt="Fullstackninja fork" src="/images/20170710/fork-atualizado.png" width="100%" /></p>
+<h2>Resumindo</h2>
+<p>Muita gente gosta de ir direto para os comandos utilizados,
+por isso resolvi colocar todos os comandos aqui de forma resumida.</p>
+<div class="highlight"><pre><span></span>git clone https://github.com/gustavofoa/fullstackninja.com.br.git
+cd fullstackninja.com.br
+git remote add upstream https://github.com/pedrohrr/fullstackninja.com.br.git
+git fetch upstream
+git pull upstream master
+git status
+git push origin master
+</pre></div>
+  </div><!-- /.entry-content -->
+
+<div class="entry-author">
+  <h3 class="title">Sobre Gustavo Furtado de Oliveira Alves</h3>
+  <div class="author-avatar">
+    <img alt='' src='/images/author-gustavo.jpeg' class='avatar avatar-68 photo' height='68' width='68' />				</div><!-- /author-avatar -->
+  <div class="author-description">
+    É mestre em computação aplicada pelo Institudo Nacional de Pesquisas Espaciais, Engenheiro da Computação pela ETEP Faculdades e Técnico em Informática pela Escola Técnica Pandiá Calógeras. Possui as certificações SCJP-6, SCWCD-5 e ASF e trabalha com desenvolvimento de softwares desde 2007.
+    <div id="author-link">
+      <a href="http://fullstackninja.com.br/autor/gustavo-furtado-de-oliveira-alves/" rel="author">
+        Veja todos os posts de Gustavo Furtado de Oliveira Alves <span class="meta-nav">&rarr;</span>
+      </a>
+    </div><!-- /author-link	-->
+  </div><!-- /author-description -->
+</div><!-- /author-info -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DJ-Bottom -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3499823579380102"
+     data-ad-slot="4001442477"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = http://fullstackninja.com.br/como-atualizar-um-repositorio-fork-no-github/;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = '//fullstackninja-com-br.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</section>
+      </div>
+
+      <div class="col-md-4">
+<a href="https://go.hotmart.com/K6138939L">
+<img src="http://www.javaavancado.com/wp-content/uploads/2016/12/Curso-Angular-e-Spring-com-borda-capa-hotmart.png" border="0" width="250" height="250" />
+</a>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3499823579380102"
+     data-ad-slot="8431642073"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>      </div>
+    </div>
+
+<!-- Footer -->
+<footer>
+<div class="row">
+        <div class="col-lg-12">
+                <p>Copyright &copy; FullStack Ninja 2017, todos os direitos reservados.
+                        <a href="/politica-de-privacidade/">Política de Privacidade</p>
+                </p>
+        </div>
+</div>
+<!-- /.row -->
+</footer>
+  </div>
+
+<script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-102888234-1']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_setCustomVar', 1, 'userType', 'INTERNAL', 2]);
+  
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+  <!-- Disqus comments -->
+  <script id="dsq-count-scr" src="//fullstackninja-com-br.disqus.com/count.js" async></script>
+
+  <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Última versão JavaScript compilada e minificada -->
+  <script src="/theme/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

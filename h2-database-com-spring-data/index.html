@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+	google_ad_client: "ca-pub-3499823579380102",
+	enable_page_level_ads: true
+  });
+  </script>
+
+    <title>H2 Database com Spring Data - FullStack Ninja</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msvalidate.01" content="78C0671DB001DAE17FEE5D7CDDCA9E3C" />
+
+  <link href="http://fullstackninja.com.br/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="FullStack Ninja Full Atom Feed" />
+  <link href="http://fullstackninja.com.br/feeds/spring.atom.xml" type="application/atom+xml" rel="alternate" title="FullStack Ninja Categories Atom Feed" />
+
+    <meta property="og:type" content="article">
+    <meta property="article:author" content="Pedro Henrique Ribeiro Rodrigues">
+    <meta property="article:published_time" content="30 de junho de 2017">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="http://fullstackninja.com.br/h2-database-com-spring-data">
+    <meta property="og:title" content="H2 Database com Spring Data">
+    <meta property="og:image" content="http://fullstackninja.com.br/images/spring.png">
+    <meta property="og:image:type" content="image/png">
+<meta property="og:description" content="O Problema Quando estamos começando um novo projeto e necessitamos de um banco de dados, muitas vezes perdemos um tempo desnecessário configurando bancos e criando a estrutura de dados. O ...">
+    <meta property="description" content="O Problema Quando estamos começando um novo projeto e necessitamos de um banco de dados, muitas vezes perdemos um tempo desnecessário configurando bancos e criando a estrutura de dados. O ...">
+
+  <!-- Última versão CSS compilada e minificada -->
+  <link rel="stylesheet" href="/theme/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- Tema opcional -->
+  <!--<link rel="stylesheet" href="/theme/bootstrap/3.3.7/css/bootstrap-theme.min.css">-->
+
+  <!-- Pygment -->
+  <link rel="stylesheet" href="/theme/css/pygment.css">
+
+  <!-- Style -->
+  <link rel="stylesheet" href="/theme/css/style.css">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#blog-menu">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://fullstackninja.com.br">FullStack Ninja</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="blog-menu">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://fullstackninja.com.br/categoria/git/">Git</a></li>
+        <li class="active"><a href="http://fullstackninja.com.br/categoria/spring/">Spring</a></li>
+      </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container -->
+</nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row banner-top">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3499823579380102"
+     data-ad-slot="4001442477"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>    </div>
+
+    <div class="row">
+      <div class="col-lg-8">
+<section id="content" class="body">
+  <header>
+    <h1 class="entry-title">
+      <a href="http://fullstackninja.com.br/h2-database-com-spring-data/" rel="bookmark"
+         title="Permalink to H2 Database com Spring Data">H2 Database com Spring Data</a></h1>
+ 
+  </header>
+  <div class="post-info">
+    <time class="published" datetime="2017-06-30T00:00:00-03:00">
+      30 de junho de 2017
+    </time>
+    <address class="vcard author">
+      Por           <a class="url fn" href="http://fullstackninja.com.br/autor/pedro-henrique-ribeiro-rodrigues/">Pedro Henrique Ribeiro Rodrigues</a>
+    </address>
+  </div><!-- /.post-info -->
+    <hr />
+  <div class="entry-content">
+    <h2>O Problema</h2>
+<p>Quando estamos começando um novo projeto e necessitamos de um banco de dados, muitas vezes perdemos um tempo desnecessário configurando bancos e criando a estrutura de dados. O intuíto deste post é mostrar que tudo pode ficar mais fácil ao se usar o <strong>H2 Database</strong>.</p>
+<h2><a href="http://www.h2database.com/html/main.html">H2 Database Engine</a></h2>
+<p>O <strong>H2</strong> é um banco de dados <strong>Open Source</strong> que funciona em memória com um console acessível pelo browser dentro do contexto da aplicação. Como ele funciona em memória todo seu armazenamento é <strong>volátil</strong>, ou seja, a cada sobe e desce da aplicação ele será reconstruído.
+Seu intuíto é ser um banco de configuração rápida e fácil, visando favorecer a produtividade.
+Outro banco de dados em memória é o <a href="http://hsqldb.org/">HSQLDB</a>, que também oferece os mesmos benefícios. Escolhemos o H2 pela sua fácil configuração em projetos Spring Boot.</p>
+<h2>Maven</h2>
+<p>Para utilizar o <strong>H2</strong> em nosso projeto iremos necessitar de duas dependeências:</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-data-jpa<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.h2database<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>h2<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</pre></div>
+
+
+<h3>Spring Data</h3>
+<p>A dependência do <strong>Spring Data</strong> fará com que Spring dê suporte ao uso de Entidades e Repositorios para conexão com o banco. Trazendo consigo também <strong>Hibernate</strong> e <strong>JPA</strong>.</p>
+<h3>H2</h3>
+<p>Na dependencia do <strong>H2</strong> definimos o escopo como <code>runtime</code>, pois necessitamos da biblioteca apenas durante a execução. Não utilizamos nenhuma classe deste pacote.</p>
+<p>Adicionaremos também a dependência ao pacote de <code>Web</code> para que consigamos expor os dados através de endpoints <strong>REST</strong>, que serão mostrados posteriormente.</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</pre></div>
+
+
+<h2>application.properties</h2>
+<p>Para configurar o banco de dados definiremos os seguintes parâmetros no <code>application.properties</code>:</p>
+<div class="highlight"><pre><span></span><span class="na">server.port</span> <span class="o">=</span> <span class="s">9000</span>
+<span class="c">#H2</span>
+<span class="c"># -Habilitará o acesso ao console do banco de dados</span>
+<span class="na">spring.h2.console.enabled</span><span class="o">=</span><span class="s">true </span>
+<span class="c"># -URL na qual o console será habilitado</span>
+<span class="na">spring.h2.console.path</span><span class="o">=</span><span class="s">/h2</span>
+<span class="c">#Datasource</span>
+<span class="c"># -URL de acesso ao banco</span>
+<span class="na">spring.datasource.url</span><span class="o">=</span><span class="s">jdbc:h2:file:~/h2db</span>
+<span class="c"># -Usuário de acesso</span>
+<span class="na">spring.datasource.username</span><span class="o">=</span><span class="s">h2sa</span>
+<span class="c"># -Senha de acesso</span>
+<span class="na">spring.datasource.password</span><span class="o">=</span><span class="s">admin</span>
+<span class="c"># -Driver utilizado para conexão</span>
+<span class="na">spring.datasource.driver-class-name</span><span class="o">=</span><span class="s">org.h2.Driver</span>
+</pre></div>
+
+
+<ul>
+<li>Definimos a porta da aplicação para 9000 para evitar conflitos na 8080.</li>
+<li>As propriedades contidas dentro de <strong>#H2</strong> serviram somente se o acesso ao console for necessário. Caso queira utilizar uma IDE para acesso ao banco ele poderá ser desabilitado.</li>
+<li>As propriedades dentro de <strong>#Datasource</strong> configuram o acesso ao banco. <code>url</code>, <code>username</code> e <code>password</code> podem ser alterados de acordo com sua preferência.</li>
+</ul>
+<h2>Entity</h2>
+<p>Configuraremos agora a entidade <strong>Pessoa</strong> com a seguinte estrutura:</p>
+<div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">br.com.fullstackninja.h2dbspringdata.entity</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.persistence.Entity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.GeneratedValue</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.GenerationType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.Id</span><span class="o">;</span>
+
+<span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;PESSOA&quot;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Pessoa</span> <span class="o">{</span>
+
+    <span class="nd">@Id</span>
+    <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span><span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">IDENTITY</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">nome</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="n">Long</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setId</span><span class="o">(</span><span class="kd">final</span> <span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getNome</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">nome</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setNome</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">nome</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">nome</span> <span class="o">=</span> <span class="n">nome</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>Pela anotação <code>@Entity</code> informamos o nome correspondente da nossa tabela</li>
+<li>Teremos no atributo <code>Id</code> nossa chave primária da tabela, que será auto incrementada ao usar a anotação <code>@GeneratedValue</code></li>
+</ul>
+<p>Por padrão ao rodar nossa aplicação, o <strong>Spring Boot</strong> identificando a existência do <strong>H2</strong> fará com que o <strong>Hibernate</strong> contido dentro do <strong>Spring Data</strong> se encarregue de criar todas nossas classes anotadas como <code>@Entity</code> no banco de dados.</p>
+<h2>Repository</h2>
+<p>Para acessar a tabela pessoa iremos criar um Repositório Spring Data:</p>
+<div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">br.com.fullstackninja.h2dbspringdata.repository</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">br.com.fullstackninja.h2dbspringdata.entity.Pessoa</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.data.repository.CrudRepository</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">PessoaRepository</span> <span class="kd">extends</span> <span class="n">CrudRepository</span><span class="o">&lt;</span><span class="n">Pessoa</span><span class="o">,</span> <span class="n">Long</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Como extendemos o <code>CrudRepository</code> já temos acesso aos metodos para criar e consultar os dados de <strong>Pessoa</strong>.</p>
+<h2>REST Controller</h2>
+<p>Para que consigamos acessar nossas informações pela aplicação iremos criar nosso <strong>Controller</strong> próprio para a entidade <strong>Pessoa</strong></p>
+<div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">br.com.fullstackninja.h2dbspringdata.controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">br.com.fullstackninja.h2dbspringdata.entity.Pessoa</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">br.com.fullstackninja.h2dbspringdata.repository.PessoaRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.GetMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RestController</span><span class="o">;</span>
+
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">path</span> <span class="o">=</span> <span class="s">&quot;/pessoas&quot;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PessoaController</span> <span class="o">{</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">PessoaRepository</span> <span class="n">repository</span><span class="o">;</span>
+
+    <span class="nd">@GetMapping</span>
+    <span class="kd">public</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">Pessoa</span><span class="o">&gt;</span> <span class="nf">list</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">repository</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<p>A anotação <code>@GetMapping</code> faz com que o método <code>list</code> possa ser acessada pelo método <strong>GET</strong> através da url <code>/pessoas</code> configurada na anotação <code>@RequestMapping</code> definida para a classe.</p>
+<h2>Testando</h2>
+<ol>
+<li>Rode o projeto como Spring-Boot
+    <code>mvn spring-boot:run</code></li>
+<li>
+<p>Acesse o console do <strong>H2</strong> através da url <a href="http://localhost:9000/h2">http://localhost:9000/h2</a>, faça login com o usuário e senha definidos no <code>application.properties</code>.</p>
+<p><img alt="Console do H2" src="/images/20170705/console-h2.jpg" width="100%" /></p>
+</li>
+<li>
+<p>No console do <strong>H2</strong> insira informações na tabela <strong>Pessoa</strong></p>
+<p><code>insert into pessoa (nome) values ('Pedro');</code></p>
+</li>
+<li>
+<p>Acesse a url <a href="http://localhost:9000/pessoas">http://localhost:9000/pessoas</a> para consultar pela aplicação o que foi cadastrado diretamente no console</p>
+<p><img alt="Resultado do Teste" src="/images/20170705/test.jpg" /></p>
+</li>
+</ol>
+<h2>Código Fonte</h2>
+<p><a href="https://github.com/pedrohrr/fullstackninja.com.br/tree/master/projects/h2db-spring-data" class="btn btn-success">
+    GitHub
+</a></p>
+  </div><!-- /.entry-content -->
+
+<div class="entry-author">
+  <h3 class="title">Sobre Pedro Henrique Ribeiro Rodrigues</h3>
+  <div class="author-avatar">
+    <img alt='' src='https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAtTAAAAJDQzNTY1YThkLWYyNGYtNGI0My1hYzE2LTkzNDI5NmQwOGE2ZA.jpg' class='avatar avatar-68 photo' height='68' width='68' />				</div><!-- /author-avatar -->
+  <div class="author-description">
+    Desenvolvedor Java desde 2008, fullstack desde 2012, geek e gamer desde sempre
+    <div id="author-link">
+      <a href="http://fullstackninja.com.br/autor/pedro-henrique-ribeiro-rodrigues/" rel="author">
+        Veja todos os posts de Pedro Henrique Ribeiro Rodrigues <span class="meta-nav">&rarr;</span>
+      </a>
+    </div><!-- /author-link	-->
+  </div><!-- /author-description -->
+</div><!-- /author-info -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DJ-Bottom -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3499823579380102"
+     data-ad-slot="4001442477"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = http://fullstackninja.com.br/h2-database-com-spring-data/;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = '//fullstackninja-com-br.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</section>
+      </div>
+
+      <div class="col-md-4">
+<a href="https://go.hotmart.com/K6138939L">
+<img src="http://www.javaavancado.com/wp-content/uploads/2016/12/Curso-Angular-e-Spring-com-borda-capa-hotmart.png" border="0" width="250" height="250" />
+</a>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:600px"
+     data-ad-client="ca-pub-3499823579380102"
+     data-ad-slot="8431642073"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>      </div>
+    </div>
+
+<!-- Footer -->
+<footer>
+<div class="row">
+        <div class="col-lg-12">
+                <p>Copyright &copy; FullStack Ninja 2017, todos os direitos reservados.
+                        <a href="/politica-de-privacidade/">Política de Privacidade</p>
+                </p>
+        </div>
+</div>
+<!-- /.row -->
+</footer>
+  </div>
+
+<script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-102888234-1']);
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_setCustomVar', 1, 'userType', 'INTERNAL', 2]);
+  
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+  <!-- Disqus comments -->
+  <script id="dsq-count-scr" src="//fullstackninja-com-br.disqus.com/count.js" async></script>
+
+  <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Última versão JavaScript compilada e minificada -->
+  <script src="/theme/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>
